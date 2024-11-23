@@ -8,4 +8,4 @@ public abstract class Position implements Serializable {
     public abstract boolean isGameOver();
 
     public abstract void makeMove(Move move);
-} 
+}
