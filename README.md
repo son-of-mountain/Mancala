@@ -1,10 +1,14 @@
 # Mancala Game - Java Implementation
 
-## Overview
+## Overview 👁
 
 This project implements the traditional **Mancala** board game in Java, incorporating advanced features such as AI-based strategies, saved games, and an interactive interface for two-player or single-player modes. Mancala is a centuries-old African game that involves strategy and skill to capture the maximum number of stones.
 
-## Features
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b393415f-7f74-4f90-911b-ef15dc1f34e0" alt="Mancala gameboard" width="400"/>
+</p>
+
+## Features ⭐
 
 - **Two-player mode**: Play with a friend locally.
 - **Single-player mode**: Compete against a machine using intelligent strategies.
@@ -14,7 +18,7 @@ This project implements the traditional **Mancala** board game in Java, incorpor
 - **Customizable difficulty**: Adjust the AI's complexity to suit your skill level.
 - **Multiple heuristics**: Implements at least two AI heuristics for enhanced gameplay.
 
-## Game Rules
+## Game Rules 🕹️
 
 1. **Game Board**:
    - The board consists of two rows of six small pits, with a larger "store" pit on each side.
@@ -32,7 +36,7 @@ This project implements the traditional **Mancala** board game in Java, incorpor
 4. **Winning**:
    - The player with the most stones in their store wins.
 
-## Technical Details
+## Technical Details 🔎
 
 ### Algorithms
 - Implements adversarial search algorithms like **Minimax** and **Alpha-Beta Pruning** for the AI.
@@ -49,7 +53,7 @@ This project implements the traditional **Mancala** board game in Java, incorpor
 - Games can be saved and resumed using a structured file format.
 - Saved games can be replayed for analysis.
 
-## Installation
+## Installation 📥
 
 1. Clone the repository:
    ```bash
