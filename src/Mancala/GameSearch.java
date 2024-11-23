@@ -2,17 +2,6 @@ package Mancala;
 
 import java.util.Vector;
 
-<<<<<<< HEAD
-public abstract class GameSearch {
-    public static final boolean DEBUG = false;
-
-    public static final boolean PROGRAM = true;
-    public static final boolean HUMAN = false;
-
-    private int complexity = 3; // Default complexity (AI depth)
-    private String strategy = "offensive"; // Default strategy
-
-=======
 /**
  * Classe abstraite pour gérer les algorithmes de recherche dans les jeux.
  * Fournit une base pour implémenter les algorithmes de recherche adversarielle comme Minimax et Alpha-Beta.
@@ -28,7 +17,6 @@ public abstract class GameSearch {
     private String strategy = "offensive"; // Stratégie par défaut ("offensive" ou "defensive")
 
     // Méthodes abstraites que les sous-classes doivent implémenter
->>>>>>> 7545cc8 (Evrything Work well i guess)
     public abstract boolean drawnPosition(Position p);
 
     public abstract boolean wonPosition(Position p, boolean player);
@@ -41,8 +29,6 @@ public abstract class GameSearch {
 
     public abstract boolean reachedMaxDepth(Position p, int depth);
 
-<<<<<<< HEAD
-=======
     /**
      * Méthode principale pour effectuer une recherche alpha-beta.
      * @param depth Profondeur actuelle dans l'arbre de recherche.
@@ -50,40 +36,10 @@ public abstract class GameSearch {
      * @param player Joueur en cours (IA ou humain).
      * @return Un vecteur contenant le score et le meilleur mouvement.
      */
->>>>>>> 7545cc8 (Evrything Work well i guess)
     protected Vector alphaBeta(int depth, Position p, boolean player) {
         return alphaBetaHelper(depth, p, player, -1000000.0f, 1000000.0f);
     }
 
-<<<<<<< HEAD
-    protected Vector alphaBetaHelper(int depth, Position p, boolean player, float alpha, float beta) {
-        if (reachedMaxDepth(p, depth)) {
-            Vector v = new Vector(2);
-            v.addElement(positionEvaluation(p, player));
-            v.addElement(null);
-            return v;
-        }
-
-        Position[] moves = possibleMoves(p, player);
-        Vector best = new Vector();
-        for (Position move : moves) {
-            Vector v = alphaBetaHelper(depth + 1, move, !player, -beta, -alpha);
-            float value = -((Float) v.elementAt(0));
-            if (value > alpha) {
-                alpha = value;
-                best.clear();
-                best.add(move);
-            }
-            if (alpha >= beta) break;
-        }
-
-        Vector v2 = new Vector();
-        v2.addElement(alpha);
-        v2.addAll(best);
-        return v2;
-    }
-
-=======
     /**
      * Méthode d'assistance pour alpha-beta avec les coupures.
      * Implémente l'algorithme optimisé vu en cours (diapositive 18).
@@ -95,7 +51,6 @@ public abstract class GameSearch {
      * @return Un vecteur contenant le score et le meilleur mouvement.
      */
     protected Vector alphaBetaHelper(int depth, Position p, boolean player, float alpha, float beta) {
-        // Vérification de la condition de fin
         if (reachedMaxDepth(p, depth) || drawnPosition(p) || wonPosition(p, !player)) {
             Vector v = new Vector(2);
             v.addElement(positionEvaluation(p, player));
@@ -141,7 +96,6 @@ public abstract class GameSearch {
     }
 
     // Méthodes pour configurer la complexité et la stratégie de l'algorithme
->>>>>>> 7545cc8 (Evrything Work well i guess)
     public void setComplexity(int complexity) {
         this.complexity = complexity;
     }

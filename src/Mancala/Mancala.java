@@ -27,7 +27,7 @@ public class Mancala {
                 case 3 -> replaySavedGame(scanner);
                 case 4 -> {
                     System.out.println("Exiting the game. Goodbye!");
-                    gameRunning = false;
+                    gameRunning = false; // Terminate the main loop
                 }
                 default -> System.out.println("Invalid choice. Please try again.");
             }
@@ -40,7 +40,7 @@ public class Mancala {
         System.out.println("        Start a New Game            ");
         System.out.println("====================================");
         System.out.println("Do you want to play against:");
-        System.out.println("1. Player 2");
+        System.out.println("1. Player 2 (Human)");
         System.out.println("2. AI");
         System.out.print("Enter your choice: ");
         int opponentChoice = scanner.nextInt();
@@ -71,9 +71,18 @@ public class Mancala {
         System.out.print("Enter filename to load: ");
         String filename = scanner.nextLine();
         MancalaPosition loadedPosition = MancalaPosition.loadGame(filename);
+
         if (loadedPosition != null) {
             System.out.println("Game loaded successfully!");
-            playGame(loadedPosition, scanner, loadedPosition.getCurrentPlayer() == 1);
+            System.out.println("Do you want to play against:");
+            System.out.println("1. Player 2 (Human)");
+            System.out.println("2. AI");
+            System.out.print("Enter your choice: ");
+            int opponentChoice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+            boolean playWithAI = (opponentChoice == 2);
+
+            playGame(loadedPosition, scanner, playWithAI);
         } else {
             System.out.println("Failed to load game. Returning to menu.");
         }
@@ -86,6 +95,7 @@ public class Mancala {
         System.out.print("Enter filename to replay: ");
         String filename = scanner.nextLine();
         MancalaPosition loadedPosition = MancalaPosition.loadGame(filename);
+
         if (loadedPosition != null) {
             System.out.println("Replaying the saved game...");
             replayGame(loadedPosition);
@@ -107,7 +117,9 @@ public class Mancala {
     }
 
     private static void playGame(MancalaPosition position, Scanner scanner, boolean playWithAI) {
-        while (!position.isGameOver()) {
+        boolean gameInProgress = true; // Flag to control the game loop
+
+        while (gameInProgress && !position.isGameOver()) {
             printBoard(position);
             System.out.println("\n====================================");
             System.out.println("Player " + (position.getCurrentPlayer() + 1) + "'s turn");
@@ -121,11 +133,10 @@ public class Mancala {
             System.out.println("====================================");
             System.out.print("Your choice: ");
 
-            // If it's the player's turn (human)
             if (position.getCurrentPlayer() == 0 || !playWithAI) {
                 String input = scanner.nextLine();
 
-                if ("H".equalsIgnoreCase(input)) { // Help request
+                if ("H".equalsIgnoreCase(input)) {
                     if (position.getHelpRequestsLeft() > 0) {
                         position.decrementHelpRequestsLeft();
                         MancalaMove suggestedMove = position.aiMove();
@@ -136,50 +147,91 @@ public class Mancala {
                     } else {
                         System.out.println("No help requests left!");
                     }
-                    continue; // Continue the game loop after help
-                } else if ("save".equalsIgnoreCase(input)) { // Save the game
+                } else if ("save".equalsIgnoreCase(input)) {
                     System.out.print("Enter filename to save the game: ");
                     String filename = scanner.nextLine();
                     MancalaPosition.saveGame(position, filename);
                     System.out.println("\n====================================");
                     System.out.println("Game saved successfully! Returning to menu...");
                     System.out.println("====================================");
-                    return; // Exit to the main menu
-                } else if ("exit".equalsIgnoreCase(input)) { // Exit without saving
+                    gameInProgress = false; // Stop the game loop and return to menu
+                } else if ("exit".equalsIgnoreCase(input)) {
                     System.out.println("\n====================================");
                     System.out.println("Exiting the game without saving. Returning to menu...");
                     System.out.println("====================================");
-                    return; // Exit to the main menu
-                }
-
-                // Handle the player's move
-                try {
-                    int pit = Integer.parseInt(input);
-                    MancalaMove move = new MancalaMove(pit);
-                    if (!position.isValidMove(move)) {
-                        System.out.println("Invalid move. Try again.");
-                    } else {
-                        position.makeMove(move);
+                    gameInProgress = false; // Stop the game loop and return to menu
+                } else {
+                    try {
+                        int pit = Integer.parseInt(input);
+                        MancalaMove move = new MancalaMove(pit);
+                        if (!position.isValidMove(move)) {
+                            System.out.println("Invalid move. Try again.");
+                        } else {
+                            position.makeMove(move);
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input. Please enter a valid pit number, 'H', 'save', or 'exit'.");
                     }
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid input. Please enter a valid pit number, 'H', 'save', or 'exit'.");
                 }
-            } else { // If it's the AI's turn
+            } else {
                 System.out.println("AI is making a move...");
-                MancalaMove aiMove = position.aiMove(); // Get the AI's move
-                position.makeMove(aiMove); // Make the move
+                MancalaMove aiMove = position.aiMove();
+                position.makeMove(aiMove);
             }
         }
 
-        // End of the game
-        printBoard(position);
-        System.out.println("\n====================================");
-        System.out.println("              Game Over             ");
-        System.out.println("====================================");
-        System.out.println("Player 1 Score: " + position.getScore(0));
-        System.out.println("Player 2 Score: " + position.getScore(1));
+        if (position.isGameOver()) {
+            printBoard(position);
+            System.out.println("\n====================================");
+            System.out.println("              Game Over             ");
+            System.out.println("====================================");
+            System.out.println("Player 1 Score: " + position.getScore(0));
+            System.out.println("Player 2 Score: " + position.getScore(1));
+        }
     }
 
+
+    private static void handlePlayerTurn(MancalaPosition position, Scanner scanner) {
+        String input = scanner.nextLine();
+
+        if ("H".equalsIgnoreCase(input)) {
+            if (position.getHelpRequestsLeft() > 0) {
+                position.decrementHelpRequestsLeft();
+                MancalaMove suggestedMove = position.aiMove();
+                System.out.println("\n====================================");
+                System.out.println("AI suggests: Play pit " + suggestedMove.getPit());
+                System.out.println("Remaining help requests: " + position.getHelpRequestsLeft());
+                System.out.println("====================================");
+            } else {
+                System.out.println("No help requests left!");
+            }
+        } else if ("save".equalsIgnoreCase(input)) {
+            System.out.print("Enter filename to save the game: ");
+            String filename = scanner.nextLine();
+            MancalaPosition.saveGame(position, filename);
+            System.out.println("\n====================================");
+            System.out.println("Game saved successfully! Returning to menu...");
+            System.out.println("====================================");
+            return; // Return to menu after saving
+        } else if ("exit".equalsIgnoreCase(input)) {
+            System.out.println("\n====================================");
+            System.out.println("Exiting the game without saving. Returning to menu...");
+            System.out.println("====================================");
+            return; // Return to menu without saving
+        } else {
+            try {
+                int pit = Integer.parseInt(input);
+                MancalaMove move = new MancalaMove(pit);
+                if (!position.isValidMove(move)) {
+                    System.out.println("Invalid move. Try again.");
+                } else {
+                    position.makeMove(move);
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid pit number, 'H', 'save', or 'exit'.");
+            }
+        }
+    }
 
     private static void printBoard(MancalaPosition position) {
         int[] board = position.getBoard();
