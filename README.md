@@ -60,3 +60,8 @@ This project implements the traditional **Mancala** board game in Java, incorpor
    git clone https://github.com/son-of-mountain/mancala-game.git
    cd mancala-game
 
+
+## Made in Tangier 😁 by
+- <a href="https://github.com/ABAKHAR721" >Abdessamad Abakhar</a>
+- <a href="https://github.com/MohamedBarbych">Mohamed Barbych</a>
+- <a href="https://github.com/son-of-mountain/">Mouaad Elhansali</a>
