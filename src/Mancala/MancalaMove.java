@@ -1,4 +1,4 @@
-package MANCALA;
+package Mancala;
 
 public class MancalaMove extends Move {
     private int pit;

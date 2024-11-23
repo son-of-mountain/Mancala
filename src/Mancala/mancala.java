@@ -1,4 +1,4 @@
-package MANCALA;
+package Mancala;
 
 import java.util.Scanner;
 

@@ -1,4 +1,4 @@
-package MANCALA;// public class MancalaSearch extends GameSearch {
+package Mancala;// public class MancalaSearch extends GameSearch {
 
 //     @Override
 //     public boolean drawnPosition(Position p) {
