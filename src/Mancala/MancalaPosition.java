@@ -2,6 +2,7 @@ package Mancala;
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.Vector;
 
 public class MancalaPosition extends Position implements Serializable,Cloneable {
     private static final long serialVersionUID = 1L;
@@ -22,6 +23,18 @@ public class MancalaPosition extends Position implements Serializable,Cloneable 
         complexity = 3; // Complexité par défaut
         strategy = "offensive"; // Stratégie par défaut
         heuristic = "basic"; // Heuristique par défaut
+    }
+
+    public String getHeuristic() {
+        return heuristic;
+    }
+
+    public String getStrategy() {
+        return strategy;
+    }
+
+    public int getComplexity() {
+        return complexity;
     }
 
     public int[] getBoard() {
@@ -87,7 +100,9 @@ public class MancalaPosition extends Position implements Serializable,Cloneable 
 
         // Vérification : la case sélectionnée ne doit pas être vide
         return board[pit] > 0;
+
     }
+
 
 
 
@@ -102,8 +117,9 @@ public class MancalaPosition extends Position implements Serializable,Cloneable 
         } else if ("defensive".equalsIgnoreCase(strategy)) {
             return playerStore - opponentStore - (heuristic.equalsIgnoreCase("advanced") ? stonesOnBoard / 4.0f : 0);
         }
-        return playerStore - opponentStore; // Stratégie par défaut
+        return playerStore - opponentStore; // Default strategy
     }
+
 
 
 
@@ -117,27 +133,39 @@ public class MancalaPosition extends Position implements Serializable,Cloneable 
             throw new AssertionError("Cloning not supported", e); // Ne devrait pas arriver si Cloneable est implémenté
         }
     }
-
+//-------------------------------------------------------------------------------------------------------------------------------------------------
 
     public MancalaMove aiMove() {
         MancalaMove bestMove = null;
         float bestScore = -Float.MAX_VALUE;
 
+        // Instantiate the search logic (ensure MancalaGameSearch is implemented)
+        MancalaGameSearch search = new MancalaGameSearch();
+
         for (int i = 0; i < 6; i++) {
-            int pit = currentPlayer == 0 ? i : i + 7;
-            if (board[pit] > 0) {
+            int pit = currentPlayer == 0 ? i : i + 7; // Player-specific pit indices
+            if (board[pit] > 0) { // Valid move
                 MancalaMove move = new MancalaMove(pit);
-                MancalaPosition newPosition = (MancalaPosition) this.clone(); // Utiliser le clone corrigé
+                MancalaPosition newPosition = (MancalaPosition) this.clone();
                 newPosition.makeMove(move);
-                float score = newPosition.evaluatePosition();
+
+                // Evaluate the move using the Alpha-Beta pruning logic
+                Vector result = search.alphaBetaHelper(0, newPosition, GameSearch.PROGRAM, -1000000.0f, 1000000.0f);
+                float score = (Float) result.elementAt(0);
+
                 if (score > bestScore) {
                     bestScore = score;
                     bestMove = move;
                 }
             }
         }
-        return bestMove;
+        return bestMove; // Return the best move found
     }
+//-------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
 
 
     public int getHelpRequestsLeft() {

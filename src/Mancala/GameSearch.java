@@ -36,6 +36,7 @@ public abstract class GameSearch {
      * @param player Joueur en cours (IA ou humain).
      * @return Un vecteur contenant le score et le meilleur mouvement.
      */
+
     protected Vector alphaBeta(int depth, Position p, boolean player) {
         return alphaBetaHelper(depth, p, player, -1000000.0f, 1000000.0f);
     }

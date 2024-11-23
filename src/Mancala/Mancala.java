@@ -54,12 +54,22 @@ public class Mancala {
         position.setComplexity(complexity);
 
         System.out.print("Enter game strategy (offensive/defensive): ");
-        String strategy = scanner.nextLine();
+        String strategy = scanner.nextLine().toLowerCase();
+        if (!strategy.equals("offensive") && !strategy.equals("defensive")) {
+            System.out.println("Invalid strategy. Setting to default (offensive).");
+            strategy = "offensive";
+        }
         position.setStrategy(strategy);
 
         System.out.print("Enter heuristic (basic/advanced): ");
-        String heuristic = scanner.nextLine();
+        String heuristic = scanner.nextLine().toLowerCase();
+        if (!heuristic.equals("basic") && !heuristic.equals("advanced")) {
+            System.out.println("Invalid heuristic. Setting to default (basic).");
+            heuristic = "basic";
+        }
+
         position.setHeuristic(heuristic);
+
 
         playGame(position, scanner, playWithAI);
     }
