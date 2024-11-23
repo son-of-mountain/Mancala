@@ -123,14 +123,14 @@ public class Mancala {
             printBoard(position);
             System.out.println("\n====================================");
             System.out.println("Player " + (position.getCurrentPlayer() + 1) + "'s turn");
-            System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            System.out.println("~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ");
             System.out.println("Help requests remaining: " + position.getHelpRequestsLeft());
             System.out.println("Options:");
             System.out.println(" - Enter a pit number to play (0-5 for Player 1, 7-12 for Player 2)");
             System.out.println(" - Type 'H' for help");
             System.out.println(" - Type 'save' to save the game and return to menu");
             System.out.println(" - Type 'exit' to exit the game without saving");
-            System.out.print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            System.out.print("~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ");
             System.out.println("\n====================================");
             System.out.print("Your choice: ");
 
