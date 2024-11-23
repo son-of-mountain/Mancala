@@ -108,7 +108,9 @@ public class Mancala {
         while (!position.isGameOver()) {
             printBoard(position);
             MancalaMove move = position.aiMove();
-            position.makeMove(move);
+            if(move != null){
+                position.makeMove(move);
+            }
         }
         printBoard(position);
         System.out.println("\n====================================");
