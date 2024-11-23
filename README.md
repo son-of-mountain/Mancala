@@ -53,6 +53,6 @@ This project implements the traditional **Mancala** board game in Java, incorpor
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/mancala-game.git
+   git clone https://github.com/son-of-mountain/mancala-game.git
    cd mancala-game
 
