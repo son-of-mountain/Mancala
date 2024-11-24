@@ -8,6 +8,50 @@ This project implements the traditional **Mancala** board game in Java, incorpor
   <img src="https://github.com/user-attachments/assets/b393415f-7f74-4f90-911b-ef15dc1f34e0" alt="Mancala gameboard" width="400"/>
 </p>
 
+## Project Supervisor:
+- Professor M'hamed AIT KBIR
+
+## Table of Contents
+
+1. [Screenshots](#screenshots)
+2. [Features](#features)
+3. [Game Rules](#game-rules)
+4. [Technical Details](#technical-details)
+5. [Installation](#installation)
+6. [Credits](#made-in-tangier--by)
+
+
+## Screenshots 📸
+### Home Screen
+![image](https://github.com/user-attachments/assets/63a72ba6-940b-4ab6-9f5f-6b0306e0655d)
+
+_Description: This is the entry point of the game, where users are greeted with a welcome screen and options to proceed._
+
+---
+
+### Configuration Screen
+![image](https://github.com/user-attachments/assets/4f9a4551-611a-458a-938f-5ca5f4c6e810)
+![image](https://github.com/user-attachments/assets/b17fabbf-1784-4dee-83b1-118b12180590)
+
+_Description: Customize your game settings, including opponent type (human or AI), game complexity, strategy, and heuristic._
+
+---
+
+### Instruction Screen
+![image](https://github.com/user-attachments/assets/e12c8c6b-ed0f-4283-a947-fa4d7b3086be)
+
+_Description: Displays the rules of Mancala, helping new players understand how to play._
+
+---
+
+### Game Screen
+![image](https://github.com/user-attachments/assets/a42033d7-37d2-4dad-be42-c379bf26bc8d)
+
+_Description: The main gameplay area. Players can interact with the pits and see their moves visualized._
+
+---
+
+   
 ## Features ⭐
 
 - **Two-player mode**: Play with a friend locally.
