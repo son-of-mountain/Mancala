@@ -4,6 +4,8 @@ import MancalaUI.Logic.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.RoundRectangle2D;
 import java.util.Vector;
 
 public class GamePanel extends JPanel {
@@ -15,7 +17,9 @@ public class GamePanel extends JPanel {
     private boolean isAgainstAI; // True if playing against AI
 
     public GamePanel(MainFrame frame) {
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout(20, 20)); // Add padding between components
+        setBackground(new Color(184, 134, 11)); // Golden brown
+
         model = new MancalaPosition(); // Initialize model
         search = new MancalaSearch(model); // Initialize AI logic
 
@@ -23,7 +27,8 @@ public class GamePanel extends JPanel {
 
         // Turn indicator at the top
         playerTurnLabel = new JLabel("Player A's Turn", SwingConstants.CENTER);
-        playerTurnLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        playerTurnLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        playerTurnLabel.setForeground(Color.WHITE);
         add(playerTurnLabel, BorderLayout.NORTH);
 
         // Main board layout
@@ -32,13 +37,15 @@ public class GamePanel extends JPanel {
 
         // Bottom buttons
         JPanel bottomPanel = new JPanel();
-        JButton saveButton = new JButton("Save");
+        bottomPanel.setOpaque(false);
+
+        JButton saveButton = createStyledButton("Save");
         saveButton.addActionListener(e -> saveGame());
 
-        JButton helpButton = new JButton("Help");
+        JButton helpButton = createStyledButton("Help");
         helpButton.addActionListener(e -> requestHelp());
 
-        JButton loadButton = new JButton("Load");
+        JButton loadButton = createStyledButton("Load");
         loadButton.addActionListener(e -> loadGame());
 
         bottomPanel.add(saveButton);
@@ -64,8 +71,7 @@ public class GamePanel extends JPanel {
     }
 
     private JPanel createBoardPanel() {
-        JPanel boardPanel = new JPanel();
-        boardPanel.setLayout(new BorderLayout(10, 10));
+        JPanel boardPanel = new JPanel(new BorderLayout(20, 20));
         boardPanel.setBackground(new Color(139, 69, 19)); // Light brown
 
         // Left Mancala (Player B)
@@ -77,13 +83,13 @@ public class GamePanel extends JPanel {
         boardPanel.add(mancalaPanels[1], BorderLayout.EAST);
 
         // Center pits panel
-        JPanel pitsPanel = new JPanel(new GridLayout(2, 6, 5, 5));
+        JPanel pitsPanel = new JPanel(new GridLayout(2, 6, 15, 15)); // Spacing between pits
         pitsPanel.setBackground(new Color(139, 69, 19));
         pitPanels = new JPanel[2][6];
 
         // Top row: B6 <- B5 <- B4 <- B3 <- B2 <- B1
         for (int i = 0; i < 6; i++) {
-            pitPanels[1][i] = createPitPanel("B" + (6 - i), 12 - i); // Adjusted to display in reverse
+            pitPanels[1][i] = createPitPanel("B" + (6 - i), 12 - i); // Reverse order for Player B
             pitsPanel.add(pitPanels[1][i]);
         }
 
@@ -98,17 +104,27 @@ public class GamePanel extends JPanel {
     }
 
     private JPanel createMancalaPanel(String playerLabel) {
-        JPanel mancalaPanel = new JPanel(new BorderLayout());
-        mancalaPanel.setPreferredSize(new Dimension(100, 150));
-        mancalaPanel.setBackground(new Color(139, 69, 19));
+        JPanel mancalaPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setColor(new Color(160, 82, 45)); // Dark brown
+                g2d.fill(new RoundRectangle2D.Double(5, 5, getWidth() - 10, getHeight() - 10, 30, 30));
+            }
+        };
+        mancalaPanel.setLayout(new BorderLayout());
+        mancalaPanel.setPreferredSize(new Dimension(120, 200));
+        mancalaPanel.setOpaque(false);
 
         JLabel label = new JLabel(playerLabel, SwingConstants.CENTER);
         label.setFont(new Font("Arial", Font.BOLD, 20));
         label.setForeground(Color.WHITE);
 
-        JLabel mancalaGrains = new JLabel();
-        mancalaGrains.setFont(new Font("Arial", Font.PLAIN, 20));
-        mancalaGrains.setForeground(Color.BLACK);
+        JLabel mancalaGrains = new JLabel("0", SwingConstants.CENTER);
+        mancalaGrains.setFont(new Font("Arial", Font.BOLD, 24));
+        mancalaGrains.setForeground(Color.YELLOW);
 
         mancalaPanel.add(label, BorderLayout.NORTH);
         mancalaPanel.add(mancalaGrains, BorderLayout.CENTER);
@@ -116,8 +132,19 @@ public class GamePanel extends JPanel {
     }
 
     private JPanel createPitPanel(String label, int pitIndex) {
-        JPanel pitPanel = new JPanel(new BorderLayout());
-        pitPanel.setBackground(new Color(160, 82, 45)); // Dark brown
+        JPanel pitPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setColor(new Color(160, 82, 45)); // Dark brown
+                g2d.fill(new Ellipse2D.Double(5, 5, getWidth() - 10, getHeight() - 10));
+            }
+        };
+        pitPanel.setLayout(new BorderLayout());
+        pitPanel.setPreferredSize(new Dimension(80, 80));
+        pitPanel.setOpaque(false);
 
         JLabel pitLabel = new JLabel(label, SwingConstants.CENTER);
         pitLabel.setFont(new Font("Arial", Font.BOLD, 14));
@@ -132,9 +159,8 @@ public class GamePanel extends JPanel {
 
         pitPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                // Disable clicking Player B pits if AI is playing
                 if (isAgainstAI && model.getCurrentPlayer() == 1) {
-                    return; // Ignore clicks on Player B's pits during AI play
+                    return; // Ignore Player B's pits when AI is playing
                 }
                 handleMove(pitIndex);
             }
@@ -155,9 +181,18 @@ public class GamePanel extends JPanel {
         grainsPanel.repaint();
     }
 
+    private JButton createStyledButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("Arial", Font.BOLD, 16));
+        button.setBackground(new Color(60, 179, 113)); // Medium sea green
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        return button;
+    }
+
     private void refreshBoard() {
         int[] board = model.getBoard();
-
         for (int i = 0; i < 6; i++) {
             updateGrains((JPanel) pitPanels[0][i].getComponent(1), i); // Bottom row (Player A)
             updateGrains((JPanel) pitPanels[1][i].getComponent(1), 12 - i); // Top row (Player B)
@@ -168,55 +203,37 @@ public class GamePanel extends JPanel {
     }
 
     private void handleMove(int pitIndex) {
-        // Check if move is valid
         if (!model.isValidMove(new MancalaMove(pitIndex))) {
             JOptionPane.showMessageDialog(this, "Invalid move! Try again.");
             return;
         }
-
-        // Make the move for the current player
         model.makeMove(new MancalaMove(pitIndex));
         refreshBoard();
-
-        // Check if the game is over
         if (model.isGameOver()) {
             JOptionPane.showMessageDialog(this, "Game Over! Winner: Player " +
                     (model.getScore(0) > model.getScore(1) ? "A" : "B"));
             return;
         }
-
-        // Switch turn or invoke AI
         if (isAgainstAI && model.getCurrentPlayer() == 1) {
-            // AI's turn (Player B)
             performAIMove();
         } else {
-            // Update the turn indicator for the next player
             playerTurnLabel.setText("Player " + (model.getCurrentPlayer() == 0 ? "A" : "B") + "'s Turn");
         }
     }
 
-
     private void performAIMove() {
         JOptionPane.showMessageDialog(this, "AI is making a move...");
-
-        // Perform AI move for Player B
         Vector<Object> result = search.performAlphaBeta(model, GameSearch.PROGRAM);
         Position bestMove = (Position) result.elementAt(1);
-
-        // Apply the AI's move
         model = (MancalaPosition) bestMove;
         refreshBoard();
-
-        // Check if the game is over after AI's move
         if (model.isGameOver()) {
             JOptionPane.showMessageDialog(this, "Game Over! Winner: Player " +
                     (model.getScore(0) > model.getScore(1) ? "A" : "B"));
         } else {
-            // Update the turn indicator for the next player
-            playerTurnLabel.setText("Player A's Turn"); // Always back to Player A
+            playerTurnLabel.setText("Player A's Turn");
         }
     }
-
 
     private void saveGame() {
         String filename = JOptionPane.showInputDialog(this, "Enter filename to save:");
